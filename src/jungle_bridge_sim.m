@@ -1,11 +1,12 @@
 function jungle_bridge_sim()
     load("../data/rubber_band_values.mat", "rubber_band_xy_pos");
     params_struct_val = params_struct();
+    
+    rubber_band_xy_pos = [params_struct_val.r0.', rubber_band_xy_pos, params_struct_val.rn.'];
 
     [x_list, y_list] = generate_shape_prediction(params_struct_val);
-
     plot(x_list, y_list, Color="r"); hold on
-        for i = 1:params_struct_val.num_links % - 1
+        for i = 1:params_struct_val.num_links - 1
             x = rubber_band_xy_pos((i * 2) - 1);
             y = rubber_band_xy_pos((i * 2));
             plot(x, y, "-o", Color=[1, 0.5, 0]);
@@ -42,7 +43,7 @@ end
 
 function U_RB_total = total_RB_potential_energy(coords, params_struct)
     arguments
-        coords (1, :) double
+        coords (:, :) double
         params_struct struct
     end
     U_RB_total = 0;
@@ -71,7 +72,7 @@ end
 
 function U_g_total = total_gravitational_potential_energy(coords, params_struct)
     arguments
-        coords (1, :) double
+        coords (:, :) double
         params_struct struct
     end
 
@@ -88,7 +89,7 @@ end
 
 function U_total = total_potential_energy(coords, params_struct)
     arguments
-        coords (1, :) double
+        coords (:, :) double
         params_struct struct
     end
     U_total = total_RB_potential_energy(coords, params_struct) + total_gravitational_potential_energy(coords, params_struct);
@@ -100,18 +101,18 @@ function [x_list, y_list] = generate_shape_prediction(params_struct)
     end
 
     opt_params = struct();
-    opt_params.beta = .5;
-    opt_params.gamma = .9;
-    opt_params.max_iter = 500;
+    opt_params.alpha = .5;
+    opt_params.beta = .9;
+    opt_params.max_iterations = 500;
     opt_params.min_gradient = 1e-7;
 
     f_cost = @(V_in) total_potential_energy(V_in, params_struct);
+    x_guess = linspace(params_struct.r0(1), params_struct.rn(1), params_struct.num_links - 1);
+    y_guess = linspace(params_struct.r0(2), params_struct.rn(2), params_struct.num_links - 1);
+    coords_guess = reshape([x_guess; y_guess], 1, []).';
 
-    coords_guess = 
-
-    coords_sol = 
+    coords_sol = numerical_gradient_descent(f_cost, coords_guess, opt_params);
 
     V_list = [params_struct.r0; coords_sol; params_struct.rn];
-    x_list = 
-    y_list = 
+    [x_list, y_list] = split_array(V_list);
 end
