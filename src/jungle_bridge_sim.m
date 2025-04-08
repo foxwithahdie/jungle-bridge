@@ -12,6 +12,7 @@ function jungle_bridge_sim()
             plot(x, y, "-o", Color=[1, 0.5, 0]);
         end
         title("Jungle Bridge Simulation")
+        subtitle("Predicted Shape vs Measured Shape")
         xlabel("X (m)"); ylabel("Y (m)")
     hold off
 end
