@@ -1,4 +1,7 @@
-function [table, data] = load_excel_file()
+function [table, data] = load_rubber_band_file()
+    % LOAD_RUBBER_BAND_FILE Loads the rubber band data from '..\RubberBandTemplate.xlsx' into
+    % data MATLAB can understand.
+
     % Specify the path of the folder where the excel file is saved
     % Make sure either the path string ends in or the file name string begins with
     % Specify the file name of the excel file we want to load

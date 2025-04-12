@@ -1,6 +1,9 @@
 function [x_list, y_list] = split_array(array)
+    % SPLIT_ARRAY Utility function. Splits an array of structure [x, y, x,
+    % y...] into two arrays, [x, x, ...] and [y, y, ...].
     arguments
         array (1, :) double
+        % The [x, y, x, y...] array.
     end
 
     x_list = [];

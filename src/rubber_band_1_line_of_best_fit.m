@@ -1,4 +1,6 @@
 function rubber_band_1_line_of_best_fit()
+    % RUBBER_BAND_1_LINE_OF_BEST_FIT Plots a line of best fit for all of
+    % the calculated rubber band stretch values.
     load("../data/rubber_band_values.mat", "rubber_band_1", "weight_value")
     slope_intercept_1 = rubber_band_1 \ weight_value;
     m_1 = slope_intercept_1(1); b_1 = slope_intercept_1(2);

@@ -1,4 +1,7 @@
 function test_gradient_descent()
+    % TEST_GRADIENT_DESCENT A test function to determine if the gradient
+    % descent is properly working.
+    
     %specify optimization parameters
     opt_params = struct();
     opt_params.alpha = .5;
