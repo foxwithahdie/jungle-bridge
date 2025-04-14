@@ -27,6 +27,13 @@ function plot_iteration(values, params_struct, iteration)
         % The current values of the ongoing gradient descent.
         params_struct struct
         % A list of optimizing parameters in a struct.
+        %   .r0 The initial point of the rubber bands.
+        %   .rn The final point of the rubber bands.
+        %   .num_links The number of rubber bands.
+        %   .k_list The list of all of the stiffness constants of the rubber bands.
+        %   .l0_list The list of all of the original lengths of the rubber bands.
+        %   .m_list The list of all of the weights between the rubber bands.
+        %   .g Gravity, in m/s^2.
         iteration double
         % The current iteration.
     end
@@ -98,6 +105,13 @@ function U_RB_total = total_RB_potential_energy(coords, params_struct)
         params_struct struct
         % The important parameters struct that holds all of the important
         % values.
+        %   .r0 The initial point of the rubber bands.
+        %   .rn The final point of the rubber bands.
+        %   .num_links The number of rubber bands.
+        %   .k_list The list of all of the stiffness constants of the rubber bands.
+        %   .l0_list The list of all of the original lengths of the rubber bands.
+        %   .m_list The list of all of the weights between the rubber bands.
+        %   .g Gravity, in m/s^2.
     end
     % Return: The potential energy from rubber bands across the entire
     % rubber band bridge.
@@ -146,6 +160,13 @@ function U_g_total = total_gravitational_potential_energy(coords, ...
         params_struct struct
         % The important parameters struct that holds all of the important
         % values.
+        %   .r0 The initial point of the rubber bands.
+        %   .rn The final point of the rubber bands.
+        %   .num_links The number of rubber bands.
+        %   .k_list The list of all of the stiffness constants of the rubber bands.
+        %   .l0_list The list of all of the original lengths of the rubber bands.
+        %   .m_list The list of all of the weights between the rubber bands.
+        %   .g Gravity, in m/s^2.
     end
     % Return: The gravitational potential energy across the entire rubber
     % band bridge.
@@ -171,6 +192,13 @@ function U_total = total_potential_energy(coords, params_struct)
         params_struct struct
         % The important parameters struct that holds all of the important
         % values.
+        %   .r0 The initial point of the rubber bands.
+        %   .rn The final point of the rubber bands.
+        %   .num_links The number of rubber bands.
+        %   .k_list The list of all of the stiffness constants of the rubber bands.
+        %   .l0_list The list of all of the original lengths of the rubber bands.
+        %   .m_list The list of all of the weights between the rubber bands.
+        %   .g Gravity, in m/s^2.
     end
     % Return: The total potential energy across the entire rubber band
     % bridge.
@@ -190,6 +218,18 @@ function return_val = numerical_gradient_descent(func, array, opt_params)
         % on.
         opt_params struct
         % The initial optimization parameters used for the gradient descent.
+        % The initial optimization parameters used for the gradient descent.
+        %   .alpha The alpha value used in gradient descent.
+        %   .beta A value used to decrease alpha in gradient descent.
+        %   .max_iterations The number of iterations that the gradient descent
+        %                   should take, at MAX.
+        %   .min_gradient The minimum possible difference in error that the
+        %                 gradient can have. If below this, the iterations
+        %                 should end early.
+        %   .init The initial points of the rubber band coordinates. Used
+        %   for plotting.
+        %   .final The final points of the rubber band coordinates. Used
+        %   for plotting.
     end
 
     array = array.';
@@ -233,7 +273,8 @@ function return_val = numerical_gradient_descent(func, array, opt_params)
 end
 
 
-function [x_list, y_list] = generate_shape_prediction(params_struct, iterations)
+function [x_list, y_list] = generate_shape_prediction(params_struct, ...
+                                                                iterations)
     % GENERATE_SHAPE_PREDICTION Generates a list of x and y values that
     % make a prediction using gradient descent of what a jungle bridge
     % would look like, based on its first and last values.

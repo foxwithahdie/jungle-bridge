@@ -9,6 +9,13 @@ function return_val = numerical_gradient_descent(func, array, opt_params)
         % on.
         opt_params struct
         % The initial optimization parameters used for the gradient descent.
+        %   .alpha The alpha value used in gradient descent.
+        %   .beta A value used to decrease alpha in gradient descent.
+        %   .max_iterations The number of iterations that the gradient descent
+        %                   should take, at MAX.
+        %   .min_gradient The minimum possible difference in error that the
+        %                 gradient can have. If below this, the iterations
+        %                 should end early.
     end
     % Return: The final iteration of the gradient descent, believed to be
     % most accurate or as accurate as can be with the amount of given

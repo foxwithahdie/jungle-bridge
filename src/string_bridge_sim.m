@@ -7,6 +7,12 @@ function string_bridge_sim()
     load("..\data\string_bridge_data.mat", "string_coords");
 
     params_struct_val = params_struct();
+    %   .r0 The initial position in the string bridge.
+    %   .rn The final position in the string bridge.
+    %   .num_links The number of strings.
+    %   .len_list The length of each string in a list.
+    %   .m_list The list of masses between each string.
+    %   .g Gravity, in m/s^2.
 
     string_coords = [params_struct_val.r0, string_coords, params_struct_val.rn];
 
@@ -56,6 +62,12 @@ function [error_vector, dummy] = bridge_error(coords, params_struct)
         % The coordinates of all of the strings in the string bridge.
         params_struct struct
         % A struct of all of the parameters required for the string bridge.
+        %   .r0 The initial position in the string bridge.
+        %   .rn The final position in the string bridge.
+        %   .num_links The number of strings.
+        %   .len_list The length of each string in a list.
+        %   .m_list The list of masses between each string.
+        %   .g Gravity, in m/s^2.
     end
 
     error_vector = zeros(params_struct.num_links, 1);
@@ -81,6 +93,12 @@ function [x_list, y_list] = generate_shape_prediction(params_struct)
     arguments
         params_struct struct
         % A struct of all of the parameters required for the string bridge.
+        %   .r0 The initial position in the string bridge.
+        %   .rn The final position in the string bridge.
+        %   .num_links The number of strings.
+        %   .len_list The length of each string in a list.
+        %   .m_list The list of masses between each string.
+        %   .g Gravity, in m/s^2.
     end
 
     x_guess = linspace(params_struct.r0(1), params_struct.rn(1), params_struct.num_links - 1);
@@ -113,9 +131,17 @@ function params = params_struct()
     params.r0 = initial_position; % Starting position of the strings
     params.rn = final_position; % Final Position of the strings
     params.num_links = 6; % Number of strings
-    params.len_list = string_lengths;
-    params.m_list = string_masses;
-    params.g = GRAVITY;
+    params.len_list = string_lengths; % Length of each string
+    params.m_list = string_masses; % Masses between the strings
+    params.g = GRAVITY; % Gravity, in m/s^2
+
+    % struct:
+    %   .r0 The initial position in the string bridge.
+    %   .rn The final position in the string bridge.
+    %   .num_links The number of strings.
+    %   .len_list The length of each string in a list.
+    %   .m_list The list of masses between each string.
+    %   .g Gravity, in m/s^2.
 end
 
 function U_g_i = single_gravitational_potential_energy(y, m, g)
@@ -141,6 +167,12 @@ function U_g_total = total_gravitational_potential_energy(coords, params_struct)
         % The coordinates of all of the strings in the string bridge.
         params_struct struct
         % A struct of all of the parameters required for the string bridge.
+        %   .r0 The initial position in the string bridge.
+        %   .rn The final position in the string bridge.
+        %   .num_links The number of strings.
+        %   .len_list The length of each string in a list.
+        %   .m_list The list of masses between each string.
+        %   .g Gravity, in m/s^2.
     end
 
     U_g_total = 0;
