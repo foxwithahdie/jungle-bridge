@@ -2,7 +2,11 @@ function jungle_bridge_sim()
     % JUNGLE_BRIDGE_SIM Simulates a rubber band jungle bridge.
     % Compares measured data to a predicted version of what that measured
     % data would look like using gradient descent.
+    
+    % Loads the rubber band x and y positions across the rubber band
+    % bridge.
     load("../data/rubber_band_values.mat", "rubber_band_xy_pos");
+
     params_struct_val = params_struct();
     
     rubber_band_xy_pos = [params_struct_val.r0.', rubber_band_xy_pos, params_struct_val.rn.'];
@@ -13,8 +17,9 @@ function jungle_bridge_sim()
 
     [x_list, y_list] = generate_shape_prediction(params_struct_val);
     
+    % Plotting the Rubber Band Bridge.
     figure;
-    measured_data = plot(x_measured,y_measured, Color='k', LineWidth=2); hold on
+    measured_data = plot(x_measured, y_measured, Color='k', LineWidth=2); hold on
         plot(x_measured, y_measured,'o', Color='r', MarkerFaceColor='r', MarkerSize=5);
         generated_data = plot(x_list, y_list, "--", Color='b', LineWidth=2);
         plot(x_list,y_list,'o', Color='g', MarkerFaceColor='g', MarkerSize=5);
@@ -27,20 +32,38 @@ function jungle_bridge_sim()
 end
 
 function params = params_struct()
-    % PARAMS_STRUCT Constructs a struct full of parameters for Jungle Bridge.
-    load("../data/rubber_band_values.mat", "k_list", "l0_list", "m_list", "GRAVITY");
+    % PARAMS_STRUCT Constructs a struct full of parameters for
+    % Jungle Bridge.
+
+    load("../data/rubber_band_values.mat", ...
+        "k_list", ...
+        "l0_list", ...
+        "m_list", ...
+        "GRAVITY" ...
+     );
+
     params = struct();
     params.r0 = [0, 0].' ./ 100; % Starting position of the rubber bands
     params.rn = [31.4, 0].' ./ 100; % Final Position of the rubber bands
     params.num_links = 6; % Number of Rubber Bands
-    params.k_list = k_list;
-    params.l0_list = l0_list;
-    params.m_list = m_list;
-    params.g = GRAVITY;
+    params.k_list = k_list; % Stiffness constants of each rubber band
+    params.l0_list = l0_list; % Original length of each rubber band
+    params.m_list = m_list; % All of the masses between the rubber bands
+    params.g = GRAVITY; % Gravity, in m/s^2
+
+    % struct:
+    %   .r0 The initial point of the rubber bands.
+    %   .rn The final point of the rubber bands.
+    %   .num_links The number of rubber bands.
+    %   .k_list The list of all of the stiffness constants of the rubber bands.
+    %   .l0_list The list of all of the original lengths of the rubber bands.
+    %   .m_list The list of all of the weights between the rubber bands.
+    %   .g Gravity, in m/s^2.
 end
 
 function U_RB_i = single_RB_potential_energy(x_1, y_1, x_2, y_2, k, l0)
-    % SINGLE_RB_POTENTIAL_ENERGY The calculated potential energy for one rubber band.
+    % SINGLE_RB_POTENTIAL_ENERGY The calculated potential energy for one
+    % rubber band.
     arguments
         x_1 double
         % The starting x position.
@@ -55,6 +78,8 @@ function U_RB_i = single_RB_potential_energy(x_1, y_1, x_2, y_2, k, l0)
         l0  double
         % The original length of the rubber band, unstretched.
     end
+    % Return: The potential energy in a single rubber band.
+
     stretched_length = sqrt((x_2 - x_1)^2 + (y_2 - y_1)^2);
     U_RB_i = 1/2 * k * max(stretched_length-l0, 0)^2;
 end
@@ -69,10 +94,21 @@ function U_RB_total = total_RB_potential_energy(coords, params_struct)
         params_struct struct
         % The important parameters struct that holds all of the important
         % values.
+        %   .r0 The initial point of the rubber bands.
+        %   .rn The final point of the rubber bands.
+        %   .num_links The number of rubber bands.
+        %   .k_list The list of all of the stiffness constants of the rubber bands.
+        %   .l0_list The list of all of the original lengths of the rubber bands.
+        %   .m_list The list of all of the weights between the rubber bands.
+        %   .g Gravity, in m/s^2.
     end
+    % Return: The potential energy from rubber bands across the entire
+    % rubber band bridge.
+
     U_RB_total = 0;
-    coords = [params_struct.r0; coords; params_struct.rn];
+    coords = [params_struct.r0; coords.'; params_struct.rn];
     PAIR_SIZE = 2;
+
     for i = 1:params_struct.num_links
         l0 = params_struct.l0_list(i);
         k = params_struct.k_list(i);
@@ -80,7 +116,9 @@ function U_RB_total = total_RB_potential_energy(coords, params_struct)
         y_1 = coords(i * PAIR_SIZE);
         x_2 = coords(i * PAIR_SIZE + 1);
         y_2 = coords(i * PAIR_SIZE + 2);
-        U_RB_total = U_RB_total + single_RB_potential_energy(x_1, y_1, x_2, y_2, k, l0);
+
+        U_RB_total = U_RB_total + single_RB_potential_energy(x_1, y_1, ...
+                                                          x_2, y_2, k, l0);
     end
 end
 
@@ -95,11 +133,14 @@ function U_g_i = single_gravitational_potential_energy(y, m, g)
         g double
         % Gravity, in m/s^2.
     end
+    % Return: The gravitational potential energy that a single rubber band
+    % has.
 
     U_g_i = y * m * g;
 end
 
-function U_g_total = total_gravitational_potential_energy(coords, params_struct)
+function U_g_total = total_gravitational_potential_energy(coords, ...
+                                                            params_struct)
     % TOTAL_GRAVITATIONAL_POTENTIAL_ENERGY The total gravitational
     % potential energy applied to all rubber bands in the bridge.
     arguments
@@ -108,15 +149,26 @@ function U_g_total = total_gravitational_potential_energy(coords, params_struct)
         params_struct struct
         % The important parameters struct that holds all of the important
         % values.
+        %   .r0 The initial point of the rubber bands.
+        %   .rn The final point of the rubber bands.
+        %   .num_links The number of rubber bands.
+        %   .k_list The list of all of the stiffness constants of the rubber bands.
+        %   .l0_list The list of all of the original lengths of the rubber bands.
+        %   .m_list The list of all of the weights between the rubber bands.
+        %   .g Gravity, in m/s^2.
     end
+    % Return: The gravitational potential energy across the entire rubber
+    % band bridge.
 
     U_g_total = 0;
+
     for i = 1:params_struct.num_links-1
         y_val = coords((i * 2));
         m = params_struct.m_list(i);
         g = params_struct.g;
 
-        U_g_total = U_g_total + single_gravitational_potential_energy(y_val, m, g);
+        U_g_total = U_g_total + single_gravitational_potential_energy( ...
+                                                              y_val, m, g);
     end
 end
 
@@ -129,8 +181,19 @@ function U_total = total_potential_energy(coords, params_struct)
         params_struct struct
         % The important parameters struct that holds all of the important
         % values.
+        %   .r0 The initial point of the rubber bands.
+        %   .rn The final point of the rubber bands.
+        %   .num_links The number of rubber bands.
+        %   .k_list The list of all of the stiffness constants of the rubber bands.
+        %   .l0_list The list of all of the original lengths of the rubber bands.
+        %   .m_list The list of all of the weights between the rubber bands.
+        %   .g Gravity, in m/s^2.
     end
-    U_total = total_RB_potential_energy(coords, params_struct) + total_gravitational_potential_energy(coords, params_struct);
+    % Return: The total potential energy across the entire rubber band
+    % bridge.
+
+    U_total = total_RB_potential_energy(coords, params_struct) + ...
+               total_gravitational_potential_energy(coords, params_struct);
 end
 
 function [x_list, y_list] = generate_shape_prediction(params_struct)
@@ -141,15 +204,26 @@ function [x_list, y_list] = generate_shape_prediction(params_struct)
         params_struct struct
         % The important parameters struct that holds all of the important
         % values.
+        %   .r0 The initial point of the rubber bands.
+        %   .rn The final point of the rubber bands.
+        %   .num_links The number of rubber bands.
+        %   .k_list The list of all of the stiffness constants of the rubber bands.
+        %   .l0_list The list of all of the original lengths of the rubber bands.
+        %   .m_list The list of all of the weights between the rubber bands.
+        %   .g Gravity, in m/s^2.
     end
+    % Return: The x and y values of the shape of the rubber band bridge
+    % generated by gradient descent.
 
+    % Optimization parameters for the gradient descent.  
     opt_params = struct();
     opt_params.alpha = .5;
     opt_params.beta = .9;
     opt_params.max_iterations = 500;
-    opt_params.min_gradient = 1e-7;
+    opt_params.min_gradient = 1e-14;
 
     f_cost = @(V_in) total_potential_energy(V_in, params_struct);
+    
     x_guess = linspace(params_struct.r0(1), params_struct.rn(1), params_struct.num_links - 1);
     y_guess = linspace(params_struct.r0(2), params_struct.rn(2), params_struct.num_links - 1);
     coords_guess = reshape([x_guess; y_guess], 1, []).';

@@ -5,11 +5,14 @@ function [x_list, y_list] = split_array(array)
         array (1, :) double
         % The [x, y, x, y...] array.
     end
+    % Returns the [x, x, ...] and [y, y, ...] array separately.
 
     x_list = [];
     y_list = [];
     size_of_array = size(array);
+
     array_length = 0;
+    
     if (size_of_array(1) ~= 1)
         array_length = size_of_array(1);
     else
