@@ -1,6 +1,6 @@
 function [table, data] = load_excel_file()
     % LOAD_EXCEL_FILE Loads an excel file as a table, and as the data itself.
-    filename = '..\data\RubberBandTemplate.xlsx';
+    filename = 'data/RubberBandTemplate.xlsx';
     
     my_table = readtable(filename);
 

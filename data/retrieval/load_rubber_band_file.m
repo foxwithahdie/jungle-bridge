@@ -2,7 +2,7 @@ function [table, data] = load_rubber_band_file()
     % LOAD_RUBBER_BAND_FILE Loads the rubber band data from '..\RubberBandTemplate.xlsx' into
     % data MATLAB can understand.
 
-    filename = '..\RubberBandTemplate.xlsx';
+    filename = 'data/RubberBandTemplate.xlsx';
 
     my_table = readtable(filename);
 

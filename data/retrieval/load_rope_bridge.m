@@ -4,7 +4,7 @@ function [table_1, table_2, table_3, matrices] = load_rope_bridge()
 
     matrices = {};
 
-    excel_table = readtable("..\RopeBridgeTemplate.xlsx");
+    excel_table = readtable("data/RopeBridgeTemplate.xlsx");
     % Read ranges for each of the tables.
     coords_row_range = 1:7;
     coords_col_range = 2:3;
