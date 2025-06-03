@@ -4,7 +4,7 @@ function string_bridge_sim()
     % values.
     
     % Loads in all of the string coordinates.
-    load("..\data\string_bridge_data.mat", "string_coords");
+    load("data/string_bridge_data.mat", "string_coords");
 
     params_struct_val = params_struct();
     %   .r0 The initial position in the string bridge.
@@ -120,7 +120,7 @@ function params = params_struct()
     % PARAMS_STRUCT Constructs a struct of all of the parameters
     % required for the string bridge.
     
-    load("..\data\string_bridge_data.mat", ...
+    load("data/string_bridge_data.mat", ...
         "initial_position", ...
         "final_position", ...
         "string_masses", ...

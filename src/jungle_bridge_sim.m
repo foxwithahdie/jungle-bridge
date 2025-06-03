@@ -5,7 +5,7 @@ function jungle_bridge_sim()
     
     % Loads the rubber band x and y positions across the rubber band
     % bridge.
-    load("../data/rubber_band_values.mat", "rubber_band_xy_pos");
+    load("data/rubber_band_values.mat", "rubber_band_xy_pos");
 
     params_struct_val = params_struct();
     
@@ -35,7 +35,7 @@ function params = params_struct()
     % PARAMS_STRUCT Constructs a struct full of parameters for
     % Jungle Bridge.
 
-    load("../data/rubber_band_values.mat", ...
+    load("data/rubber_band_values.mat", ...
         "k_list", ...
         "l0_list", ...
         "m_list", ...
